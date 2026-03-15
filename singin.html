@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign In | Elegant Moments</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --gold:       #c9a96e;
+            --gold-light: #e8d5b0;
+            --gold-dark:  #9e7840;
+            --charcoal:   #141210;
+            --charcoal-2: #1e1c18;
+            --charcoal-3: #28261f;
+            --warm-white: #faf8f3;
+            --muted:      #8a8070;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            background: var(--charcoal);
+            color: var(--warm-white);
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--charcoal); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+        /* ════════════════════════════════
+           FULL PAGE LAYOUT
+        ════════════════════════════════ */
+        .auth-page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* ── LEFT PANEL (image side) ── */
+        .auth-left {
+            position: relative;
+            overflow: hidden;
+            background: var(--charcoal-3);
+        }
+        .auth-left-bg {
+            position: absolute; inset: 0;
+            background: url('https://images.unsplash.com/photo-1519741497674-611481863552?w=1200&q=85') center/cover no-repeat;
+            filter: brightness(0.45) saturate(0.7);
+            transition: transform 12s ease;
+        }
+        .auth-page:hover .auth-left-bg { transform: scale(1.05); }
+
+        .auth-left-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(160deg, rgba(10,8,6,0.3) 0%, rgba(10,8,6,0.65) 100%);
+        }
+
+        .auth-left-content {
+            position: relative; z-index: 2;
+            height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: space-between;
+            padding: 48px 52px;
+        }
+
+        .auth-brand {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none;
+        }
+        .auth-brand img {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 1.5px solid var(--gold); object-fit: cover;
+        }
+        .auth-brand span {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.03em;
+        }
+
+        .auth-left-quote {
+            margin-bottom: 52px;
+        }
+        .auth-left-quote blockquote {
+            border-left: 2px solid var(--gold);
+            padding-left: 20px;
+            margin: 0;
+        }
+        .auth-left-quote blockquote p {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            color: var(--warm-white);
+            line-height: 1.35;
+            margin-bottom: 16px;
+        }
+        .auth-left-quote blockquote cite {
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--gold);
+        }
+
+        /* Left panel bg decorations */
+        .left-ring {
+            position: absolute; border-radius: 50%;
+            border: 1px solid rgba(201,169,110,0.12);
+            pointer-events: none;
+        }
+        .left-ring-1 { width: 300px; height: 300px; top: -80px; right: -80px; }
+        .left-ring-2 { width: 180px; height: 180px; top: -30px; right: -30px; border-color: rgba(201,169,110,0.07); }
+        .left-ring-3 { width: 200px; height: 200px; bottom: 60px; left: -60px; border-color: rgba(201,169,110,0.08); }
+
+        /* ── RIGHT PANEL (form side) ── */
+        .auth-right {
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 70% 60% at 80% 10%, rgba(201,169,110,0.1) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 10% 90%, rgba(201,169,110,0.07) 0%, transparent 55%),
+                var(--charcoal-2);
+            display: flex; align-items: center; justify-content: center;
+            padding: 60px 40px;
+        }
+
+        /* Right panel bg decorations */
+        .right-decor { position: absolute; pointer-events: none; z-index: 0; }
+        .right-bracket {
+            position: absolute; width: 50px; height: 50px;
+            pointer-events: none; z-index: 0;
+        }
+        .right-bracket-tl { top: 24px; left: 24px; border-top: 1px solid rgba(201,169,110,0.15); border-left: 1px solid rgba(201,169,110,0.15); }
+        .right-bracket-br { bottom: 24px; right: 24px; border-bottom: 1px solid rgba(201,169,110,0.15); border-right: 1px solid rgba(201,169,110,0.15); }
+        .right-ring-bg {
+            position: absolute; border-radius: 50%;
+            border: 1px solid rgba(201,169,110,0.06);
+        }
+        .right-ring-1 { width: 320px; height: 320px; bottom: -100px; right: -100px; }
+        .right-ring-2 { width: 150px; height: 150px; top: 15%; left: -40px; border-color: rgba(201,169,110,0.05); }
+
+        .right-dot {
+            position: absolute; border-radius: 50%;
+            background: rgba(201,169,110,0.18);
+        }
+        .right-dot-1 { width: 4px; height: 4px; top: 12%; right: 12%; }
+        .right-dot-2 { width: 3px; height: 3px; top: 70%; left: 8%; }
+        .right-dot-3 { width: 5px; height: 5px; bottom: 18%; right: 20%; background: rgba(201,169,110,0.12); }
+
+        .right-hline {
+            position: absolute; height: 1px; left: 0; right: 0;
+            background: linear-gradient(90deg, transparent, rgba(201,169,110,0.07), transparent);
+        }
+        .right-hline-1 { top: 18%; }
+        .right-hline-2 { bottom: 18%; }
+
+        .right-watermark {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(60px, 10vw, 120px);
+            font-weight: 700; font-style: italic;
+            color: rgba(201,169,110,0.025);
+            white-space: nowrap;
+            user-select: none; pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── AUTH FORM CARD ── */
+        .auth-card {
+            position: relative; z-index: 1;
+            width: 100%; max-width: 420px;
+            animation: cardIn 0.7s cubic-bezier(0.34,1.3,0.64,1) both;
+        }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(32px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .auth-eyebrow {
+            font-size: 0.68rem;
+            letter-spacing: 0.35em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 10px;
+            animation: fadeUp 0.6s 0.2s ease both;
+        }
+        .auth-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.9rem, 3vw, 2.6rem);
+            font-weight: 700;
+            color: var(--warm-white);
+            line-height: 1.1;
+            margin-bottom: 8px;
+            animation: fadeUp 0.6s 0.3s ease both;
+        }
+        .auth-title em { font-style: italic; color: var(--gold); }
+        .auth-sub {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 36px;
+            animation: fadeUp 0.6s 0.4s ease both;
+        }
+
+        .auth-gold-rule {
+            width: 40px; height: 1px;
+            background: var(--gold);
+            margin-bottom: 32px;
+            animation: fadeUp 0.6s 0.35s ease both;
+        }
+
+        /* Form fields */
+        .field-group {
+            margin-bottom: 18px;
+            animation: fadeUp 0.6s ease both;
+        }
+        .field-group:nth-child(1) { animation-delay: 0.45s; }
+        .field-group:nth-child(2) { animation-delay: 0.52s; }
+        .field-group:nth-child(3) { animation-delay: 0.59s; }
+
+        .field-label {
+            display: block;
+            font-size: 0.7rem; font-weight: 500;
+            letter-spacing: 0.14em; text-transform: uppercase;
+            color: var(--gold-light);
+            margin-bottom: 8px;
+        }
+        .input-wrap { position: relative; }
+        .field-input {
+            width: 100%;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(201,169,110,0.18);
+            border-radius: 0;
+            padding: 13px 44px 13px 16px;
+            color: var(--warm-white);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem; font-weight: 300;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+            outline: none;
+        }
+        .field-input::placeholder { color: rgba(138,128,112,0.5); }
+        .field-input:focus {
+            border-color: var(--gold);
+            background: rgba(201,169,110,0.04);
+            box-shadow: 0 0 0 3px rgba(201,169,110,0.08);
+        }
+        .field-icon {
+            position: absolute; right: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: rgba(201,169,110,0.35); font-size: 0.85rem;
+            pointer-events: none;
+        }
+        .toggle-pass {
+            position: absolute; right: 14px; top: 50%;
+            transform: translateY(-50%);
+            color: rgba(201,169,110,0.35); font-size: 0.85rem;
+            cursor: pointer; transition: color 0.3s;
+        }
+        .toggle-pass:hover { color: var(--gold); }
+
+        /* Remember / forgot row */
+        .auth-options {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 28px; margin-top: 4px;
+            animation: fadeUp 0.6s 0.62s ease both;
+        }
+        .remember-wrap {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.8rem; color: var(--muted);
+            cursor: pointer;
+        }
+        .remember-wrap input[type="checkbox"] {
+            accent-color: var(--gold);
+            width: 15px; height: 15px;
+            cursor: pointer;
+        }
+        .forgot-link {
+            font-size: 0.78rem;
+            color: var(--gold);
+            text-decoration: none;
+            letter-spacing: 0.06em;
+            transition: color 0.3s;
+        }
+        .forgot-link:hover { color: var(--gold-light); }
+
+        /* Submit button */
+        .btn-auth {
+            width: 100%;
+            background: var(--gold); border: none;
+            color: var(--charcoal);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.78rem; font-weight: 600;
+            letter-spacing: 0.22em; text-transform: uppercase;
+            padding: 15px; cursor: pointer;
+            transition: all 0.35s;
+            position: relative; overflow: hidden;
+            animation: fadeUp 0.6s 0.68s ease both;
+        }
+        .btn-auth::before {
+            content: ''; position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.5s;
+        }
+        .btn-auth:hover::before { left: 100%; }
+        .btn-auth:hover {
+            background: var(--gold-dark); color: #fff;
+            box-shadow: 0 12px 36px rgba(201,169,110,0.35);
+            transform: translateY(-2px);
+        }
+        .btn-auth:active { transform: translateY(0); }
+
+        /* Divider */
+        .auth-divider {
+            display: flex; align-items: center; gap: 14px;
+            margin: 24px 0;
+            animation: fadeUp 0.6s 0.72s ease both;
+        }
+        .auth-divider::before, .auth-divider::after {
+            content: ''; flex: 1; height: 1px;
+            background: rgba(201,169,110,0.12);
+        }
+        .auth-divider span {
+            font-size: 0.7rem; color: var(--muted);
+            letter-spacing: 0.1em;
+        }
+
+        /* Social buttons */
+        .social-row {
+            display: flex; gap: 12px;
+            animation: fadeUp 0.6s 0.76s ease both;
+        }
+        .btn-social {
+            flex: 1;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(201,169,110,0.15);
+            color: var(--muted);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.78rem;
+            padding: 11px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            cursor: pointer; transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-social:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            background: rgba(201,169,110,0.05);
+        }
+
+        /* Footer link */
+        .auth-footer {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 0.82rem;
+            color: var(--muted);
+            animation: fadeUp 0.6s 0.8s ease both;
+        }
+        .auth-footer a {
+            color: var(--gold);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .auth-footer a:hover { color: var(--gold-light); }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 991px) {
+            .auth-page { grid-template-columns: 1fr; }
+            .auth-left { display: none; }
+            .auth-right { padding: 48px 28px; min-height: 100vh; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-page">
+
+    <!-- ── LEFT IMAGE PANEL ── -->
+    <div class="auth-left">
+        <div class="auth-left-bg"></div>
+        <div class="auth-left-overlay"></div>
+
+        <!-- Rings -->
+        <div class="left-ring left-ring-1"></div>
+        <div class="left-ring left-ring-2"></div>
+        <div class="left-ring left-ring-3"></div>
+
+        <div class="auth-left-content">
+            <!-- Brand -->
+            <a href="index.html" class="auth-brand">
+                <img src="https://st.depositphotos.com/1877361/1877/v/450/depositphotos_18771611-stock-illustration-photography-logo-with-colorful-leaves.jpg" alt="Logo">
+                <span>Elegant Moments</span>
+            </a>
+
+            <!-- Quote -->
+            <div class="auth-left-quote">
+                <blockquote>
+                    <p>"Every picture tells a story — let us tell yours."</p>
+                    <cite>Elegant Moments Photography</cite>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── RIGHT FORM PANEL ── -->
+    <div class="auth-right">
+
+        <!-- Background decorations -->
+        <div class="right-bracket right-bracket-tl"></div>
+        <div class="right-bracket right-bracket-br"></div>
+        <div class="right-ring-bg right-ring-1"></div>
+        <div class="right-ring-bg right-ring-2"></div>
+        <div class="right-dot right-dot-1"></div>
+        <div class="right-dot right-dot-2"></div>
+        <div class="right-dot right-dot-3"></div>
+        <div class="right-hline right-hline-1"></div>
+        <div class="right-hline right-hline-2"></div>
+        <div class="right-watermark">Sign In</div>
+
+        <!-- Form card -->
+        <div class="auth-card">
+
+            <p class="auth-eyebrow">Welcome Back</p>
+            <h2 class="auth-title">Sign <em>In</em></h2>
+            <div class="auth-gold-rule"></div>
+            <p class="auth-sub">Enter your details to access your account</p>
+
+            <form id="signinForm" onsubmit="handleSignIn(event)">
+                <div class="field-group">
+                    <label class="field-label">Email Address</label>
+                    <div class="input-wrap">
+                        <input id="siEmail" type="email" class="field-input" placeholder="example@email.com" required>
+                        <i class="fa-regular fa-envelope field-icon"></i>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Password</label>
+                    <div class="input-wrap">
+                        <input type="password" class="field-input" id="signInPass" placeholder="Enter your password" required>
+                        <i class="fa-regular fa-eye toggle-pass" onclick="togglePass('signInPass', this)"></i>
+                    </div>
+                </div>
+
+                <div class="auth-options">
+                    <label class="remember-wrap">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn-auth">
+                    <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> Sign In
+                </button>
+
+                <div class="auth-divider"><span>or continue with</span></div>
+
+                <div class="social-row">
+                    <a href="#" class="btn-social">
+                        <i class="fa-brands fa-google"></i> Google
+                    </a>
+                    <a href="#" class="btn-social">
+                        <i class="fa-brands fa-facebook-f"></i> Facebook
+                    </a>
+                </div>
+            </form>
+
+            <p class="auth-footer">
+                Don't have an account? <a href="singup.html">Sign Up</a>
+            </p>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ══ SIGN IN SUCCESS OVERLAY ══ -->
+<div id="siOverlay" style="
+    display:none; position:fixed; inset:0; z-index:9999;
+    align-items:center; justify-content:center;
+    background:rgba(10,8,6,0.92);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    padding:20px; animation:siOvIn 0.4s ease both;">
+    <div id="siBox" style="
+        background:#1e1c18; border:1px solid rgba(201,169,110,0.22);
+        max-width:440px; width:100%; padding:52px 44px; text-align:center;
+        position:relative; animation:siBoxIn 0.55s 0.1s cubic-bezier(0.34,1.4,0.64,1) both;">
+
+        <!-- top gold accent line -->
+        <div style="position:absolute;top:0;left:10%;right:10%;height:2px;background:linear-gradient(90deg,transparent,#c9a96e,transparent);"></div>
+
+        <!-- Animated check -->
+        <div id="siCheck" style="
+            width:78px;height:78px;border-radius:50%;
+            background:linear-gradient(135deg,#9e7840,#c9a96e);
+            display:flex;align-items:center;justify-content:center;
+            margin:0 auto 26px;
+            box-shadow:0 0 0 14px rgba(201,169,110,0.09),0 16px 40px rgba(201,169,110,0.3);
+            animation:siPop 0.6s 0.35s cubic-bezier(0.34,1.56,0.64,1) both;">
+            <i class="fa-solid fa-check" style="font-size:1.85rem;color:#141210;animation:siIcon 0.4s 0.75s ease both;"></i>
+        </div>
+
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;color:#faf8f3;line-height:1.2;margin-bottom:10px;animation:siFade 0.5s 0.5s ease both;">
+            Welcome <em style="font-style:italic;color:#c9a96e;">Back!</em>
+        </h3>
+        <p style="font-size:0.86rem;color:#8a8070;line-height:1.7;margin-bottom:22px;animation:siFade 0.5s 0.58s ease both;">
+            You have signed in successfully.<br>Taking you to Elegant Moments…
+        </p>
+
+        <!-- Email pill -->
+        <div id="siEmailPill" style="
+            display:inline-flex;align-items:center;gap:10px;
+            background:rgba(201,169,110,0.07);border:1px solid rgba(201,169,110,0.15);
+            padding:9px 20px;margin-bottom:30px;
+            font-size:0.84rem;color:#c9a96e;
+            animation:siFade 0.5s 0.64s ease both;">
+            <i class="fa-solid fa-envelope" style="font-size:0.78rem;"></i>
+            <span id="siEmailText">—</span>
+        </div>
+
+        <!-- Progress bar -->
+        <div style="background:rgba(201,169,110,0.1);height:3px;margin-bottom:26px;border-radius:2px;overflow:hidden;animation:siFade 0.5s 0.7s ease both;">
+            <div id="siProgress" style="height:100%;width:0%;background:linear-gradient(90deg,#9e7840,#c9a96e);border-radius:2px;transition:width 0.05s linear;"></div>
+        </div>
+
+        <p style="font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(138,128,112,0.6);animation:siFade 0.5s 0.74s ease both;">
+            Redirecting in <span id="siCountdown">3</span>s
+        </p>
+
+    </div>
+</div>
+
+<style>
+@keyframes siOvIn  { from { opacity:0; } to { opacity:1; } }
+@keyframes siBoxIn { from { opacity:0; transform:scale(0.84) translateY(28px); } to { opacity:1; transform:scale(1) translateY(0); } }
+@keyframes siPop   { from { opacity:0; transform:scale(0.3); } to { opacity:1; transform:scale(1); } }
+@keyframes siIcon  { from { opacity:0; transform:rotate(-20deg) scale(0.5); } to { opacity:1; transform:rotate(0) scale(1); } }
+@keyframes siFade  { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.si-conf { position:absolute; border-radius:50%; animation:siConf 1.2s ease-out both; }
+@keyframes siConf  { from { opacity:1; transform:translateY(-15px) rotate(0); } to { opacity:0; transform:translateY(55px) rotate(360deg); } }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function handleSignIn(e) {
+        e.preventDefault(); // stop default form redirect
+
+        const email = document.getElementById('siEmail').value.trim();
+        document.getElementById('siEmailText').textContent = email;
+
+        // spawn confetti
+        const box = document.getElementById('siBox');
+        box.querySelectorAll('.si-conf').forEach(d => d.remove());
+        const colors = ['#c9a96e','#e8d5b0','#9e7840','#fff','#f0c040'];
+        for (let i = 0; i < 20; i++) {
+            const d = document.createElement('div');
+            d.className = 'si-conf';
+            d.style.background = colors[Math.floor(Math.random() * colors.length)];
+            d.style.left = Math.random() * 100 + '%';
+            d.style.top  = Math.random() * 38 + '%';
+            d.style.width = d.style.height = (3 + Math.random() * 6) + 'px';
+            d.style.animationDelay    = (Math.random() * 0.5) + 's';
+            d.style.animationDuration = (0.8 + Math.random() * 0.7) + 's';
+            box.appendChild(d);
+        }
+
+        // show overlay
+        const overlay = document.getElementById('siOverlay');
+        overlay.style.display = 'flex';
+
+        // countdown + progress bar → redirect to index.html
+        let secs = 3;
+        const countEl    = document.getElementById('siCountdown');
+        const progressEl = document.getElementById('siProgress');
+        const total      = secs * 1000;
+        const start      = Date.now();
+
+        const tick = setInterval(() => {
+            const elapsed = Date.now() - start;
+            const pct     = Math.min((elapsed / total) * 100, 100);
+            progressEl.style.width = pct + '%';
+
+            const remaining = Math.ceil((total - elapsed) / 1000);
+            countEl.textContent = remaining > 0 ? remaining : 0;
+
+            if (elapsed >= total) {
+                clearInterval(tick);
+                window.location.href = 'index.html'; // ← redirect to home
+            }
+        }, 50);
+    }
+
+    function togglePass(id, icon) {
+        const input = document.getElementById(id);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('fa-eye', 'fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('fa-eye-slash', 'fa-eye');
+        }
+    }
+</script>
+</body>
+</html>
